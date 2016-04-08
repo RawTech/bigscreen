@@ -1,0 +1,78 @@
+body {
+    background: black;
+}
+div.pane-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 49%;
+}
+div.pane-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 49%;
+}
+table.rundeck {
+    width: 100%;
+}
+table.rundeck td {
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: normal;
+    background-color: #2c3e50;
+    border-top: 4px solid black;
+    font-size: 2.4em;
+}
+table.rundeck-failures td.fails {
+    background-color: #c0392b;
+}
+table.rundeck-failures td.name {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 99%;
+    padding-top: 0;
+    color: white;
+}
+table.rundeck-failures td.name div {
+    width: 10px;
+    height: 10px;
+}
+table.rundeck-failures td.success {
+    background-color: #27ae60;
+    text-align: right;
+}
+table.rundeck-failures td.rate {
+    text-align: right;
+    color: white;
+}
+table.rundeck-recent td.name {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 99%;
+    padding-top: 0;
+    color: white;
+}
+table.rundeck-recent td.name div {
+    width: 10px;
+    height: 10px;
+}
+table.rundeck-recent td.name div a {
+    text-decoration: none;
+    color: white;
+}
+table.rundeck-recent td.started {
+    color: white;
+}
+table.rundeck-recent td.duration {
+    color: white;
+}
+table.rundeck-recent td.started.succeeded {
+    background-color: #27ae60;
+}
+table.rundeck-recent td.started.aborted {
+    background-color: #7f8c8d;
+}
+table.rundeck-recent td.started.failed {
+    background-color: #c0392b;
+}

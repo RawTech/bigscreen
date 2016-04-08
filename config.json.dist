@@ -1,0 +1,17 @@
+{
+  "port": 3000,
+
+  "rundeck": {
+    "hostname": "",
+    "username": "",
+    "password": "",
+    "database": "",
+    "port": 3306
+  },
+
+  "screens": {
+    "jarvis": {
+      "type": "rundeck"
+    }
+  }
+}

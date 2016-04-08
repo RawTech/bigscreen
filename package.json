@@ -1,0 +1,37 @@
+{
+  "name": "bigscreen",
+  "main": "gulpfile.js",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"gulp watch\" \"node ./server/bin/www\" ",
+    "postinstall": "gulp"
+  },
+  "dependencies": {
+    "angular2": "2.0.0-beta.13",
+    "del": "^2.2.0",
+    "es6-promise": "^3.1.2",
+    "es6-shim": "^0.35.0",
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tslint": "^3.6.0",
+    "gulp-typescript": "^2.11.0",
+    "jquery": "^2.2.3",
+    "jsonwebtoken": "^5.5.4",
+    "materialize-css": "^0.97.6",
+    "materializecss": "^1.0.11",
+    "moment": "^2.12.0",
+    "morgan": "~1.6.1",
+    "mysql": "^2.10.2",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.0-beta.2",
+    "serve-favicon": "~2.3.0",
+    "socket.io": "^1.4.5",
+    "systemjs": "0.19.25",
+    "zone.js": "0.6.6",
+    "lodash": "^4.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^2.0.0"
+  }
+}

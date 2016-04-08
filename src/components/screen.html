@@ -1,0 +1,21 @@
+<div [style.display]="viewType==='rundeck'?'inherit':'none'">
+    <div class="pane-left">
+        <table class="rundeck-failures rundeck">
+            <tr *ngFor="#job of data['rundeck-failures']; #i=index">
+                <td class="rate">{{ job.success_rate | percent:'1.0-0' }}</td>
+                <td class="name"><div>{{ job.job_name }}</div></td>
+                <td class="success">{{ job.count_success }}</td>
+                <td class="fails">{{ job.count_fail }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="pane-right">
+        <table class="rundeck-recent rundeck">
+            <tr *ngFor="#job of data['rundeck-recent']; #i=index">
+                <td class="started {{ job.status }}">{{ job.started_time }}</td>
+                <td class="duration">{{ job.duration_seconds }}s</td>
+                <td class="name"><div><a target="_blank" href="http://rundeck.wrenkitchens.com/project/it-development/execution/show/{{ job.id }}">{{ job.job_name }}</a></div></td>
+            </tr>
+        </table>
+    </div>
+</div>

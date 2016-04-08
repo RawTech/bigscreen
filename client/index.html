@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>BigScreen</title>
+        <script src="/es6-shim/es6-shim.min.js"></script>
+        <script src="/systemjs/dist/system-polyfills.js"></script>
+        <script src="/angular2/bundles/angular2-polyfills.min.js"></script>
+        <script src="/systemjs/dist/system.js"></script>
+        <script src="/jquery/dist/jquery.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="/js/css/style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        <script>
+        System.config({
+            defaultJSExtensions: true,
+            paths: {
+                'rxjs/operator/*' : '/rxjs/add/operator/*',
+                '*': '/*'
+            },
+            packages: {
+                app: {
+                    format: 'register',
+                    defaultExtension: 'js'
+                }
+            }
+        });
+        </script>
+    </head>
+
+    <body>
+        <app>
+            <div class="ui active inverted dimmer">
+                <div class="ui large loader"></div>
+            </div>
+        </app>
+        <script>
+            System.import('/js/app');
+        </script>
+        <script src="/socket.io/socket.io.js"></script>
+    </body>
+</html>
