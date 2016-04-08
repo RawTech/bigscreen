@@ -1,0 +1,4 @@
+{
+  "name": "bigscreen",
+  "script": "server/bin/www"
+}
