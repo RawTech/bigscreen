@@ -8,6 +8,7 @@ var socket = null;
 
 function init() {
     failures = [];
+    recent = [];
 
     connection = mysql.createConnection({
         host: config.rundeck.hostname,
@@ -17,7 +18,7 @@ function init() {
         port: config.rundeck.port
     });
 
-    setInterval(loop, 1000);
+    setInterval(loop, 2000);
 
     loop();
 }
@@ -43,12 +44,16 @@ function loop() {
             group by e.scheduled_execution_id \
             having count_fail > 0 \
             order by count_fail desc) x \
-        order by success_rate desc',
+        order by success_rate desc, x.count_fail desc',
         ['failed', 'succeeded', '%Live'],
         function (err, rows) {
             if (err) throw err;
-
+    
             failures = parser.parseFailed(rows);
+
+            if (socket !== null) {
+                socket.emit('screen-data', {type: 'rundeck-failures', data: failures});
+            }
         }
     );
 
@@ -73,15 +78,14 @@ function loop() {
         ['%Live'],
         function (err, rows) {
             if (err) throw err;
-
+    
             recent = parser.parseRecent(rows);
+
+            if (socket !== null) {
+                socket.emit('screen-data', {type: 'rundeck-recent', data: recent});
+            }
         }
     );
-
-    if (socket !== null) {
-        socket.emit('screen-data', {type: 'rundeck-failures', data: failures});
-        socket.emit('screen-data', {type: 'rundeck-recent', data: recent});
-    }
 }
 
 module.exports = {

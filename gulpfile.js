@@ -12,29 +12,29 @@ gulp.task('clean', function(cb) {
 
 gulp.task('ts-lint', function() {
 
-	return gulp
-		.src(config.allTs)
-		.pipe(tslint())
-		.pipe(tslint.report('prose', {
-			emmitError: false
-		}))
+    return gulp
+        .src(config.allTs)
+        .pipe(tslint())
+        .pipe(tslint.report('prose', {
+            emmitError: false
+        }))
 });
 
 gulp.task('compile-ts', function() {
 
-	var sourceTsFiles = [
-		config.allTs,
-		config.typings
-	];
-
-	var toResult = gulp
-		.src(sourceTsFiles)
-		.pipe(sourcemap.init())
-		.pipe(tsc(tsProject));
-
-	return toResult.js
-		.pipe(sourcemap.write('.'))
-		.pipe(gulp.dest(config.toOutputhPath));
+    var sourceTsFiles = [
+        config.allTs,
+        config.typings
+    ];
+    
+    var toResult = gulp
+        .src(sourceTsFiles)
+        .pipe(sourcemap.init())
+        .pipe(tsc(tsProject));
+    
+    return toResult.js
+        .pipe(sourcemap.write('.'))
+        .pipe(gulp.dest(config.toOutputhPath));
 });
 
 gulp.task('copy-html', function () {
@@ -53,8 +53,7 @@ gulp.task('copy-css', function () {
 
 // compile each time when we change something in /src folder
 gulp.task('watch', ['ts-lint', 'compile-ts'], function() {
-	
-	gulp.watch([config.allTs], ['ts-lint', 'compile-ts', 'copy-html', 'copy-css']);	
+    gulp.watch([config.allTs], ['ts-lint', 'compile-ts', 'copy-html', 'copy-css']);	
 });
 
 gulp.task('default', ['clean', 'ts-lint', 'compile-ts', 'copy-html', 'copy-css']);

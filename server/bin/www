@@ -1,51 +1,71 @@
 #!/usr/bin/env node
 
-var app = require('../app');
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var app = express();
 var http = require('http');
 var rundeck = require('../rundeck/rundeck');
+var jenkins = require('../jenkins/jenkins');
 var config = require('../config');
-
 var port = config.port;
+
+app.disable("x-powered-by");
 app.set('port', port);
 
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 
-rundeck.setSocket(io);
+app.use(favicon(path.join(__dirname, '../../client', 'favicon.ico')));
+app.use(express.static('./client/'));
+app.use(express.static('./node_modules/'));
+app.use(logger('dev'));
 
+// rundeck
+app.use('/api/rundeck', require('../routes/rundeckapi'));
+
+// jenkins
+app.use('/api/jenkins', require('../routes/jenkinsapi'));
+
+// reload
+app.use('/api/reload/:screenName', function(req, res) {
+    io.emit('reload', req.params.screenName);
+
+    res.send('ok');
+});
+
+// switch for duration
+app.use('/api/switch/:screenName/:viewName/:duration', function(req, res) {
+    io.emit('show-screen', {
+        screenName: req.params.screenName,
+        viewName: req.params.viewName,
+        duration: req.params.duration
+    });
+
+    res.send('ok');
+});
+
+// switch
+app.use('/api/switch/:screenName/:viewName', function(req, res) {
+    io.emit('show-screen', {
+        screenName: req.params.screenName,
+        viewName: req.params.viewName
+    });
+
+    res.send('ok');
+});
+
+// send the rest to angular
+app.use(function(req, res) {
+    res.sendFile(path.join(__dirname, '../../client', 'index.html'));
+});
+
+// init data collectors
+rundeck.init();
+jenkins.init();
+rundeck.setSocket(io);
+jenkins.setSocket(io);
 io.on('connection', require('./sockerhandler'));
 
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  console.log('Listening on ' + bind);
-}

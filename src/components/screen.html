@@ -1,4 +1,4 @@
-<div [style.display]="viewType==='rundeck'?'inherit':'none'">
+<div *ngIf="viewName==='rundeck-live'">
     <div class="pane-left">
         <table class="rundeck-failures rundeck">
             <tr *ngFor="#job of data['rundeck-failures']; #i=index">
@@ -14,8 +14,35 @@
             <tr *ngFor="#job of data['rundeck-recent']; #i=index">
                 <td class="started {{ job.status }}">{{ job.started_time }}</td>
                 <td class="duration">{{ job.duration_seconds }}s</td>
-                <td class="name"><div><a target="_blank" href="http://rundeck.wrenkitchens.com/project/it-development/execution/show/{{ job.id }}">{{ job.job_name }}</a></div></td>
+                <td class="name"><div>{{ job.job_name }}</div></td>
             </tr>
         </table>
     </div>
+</div>
+
+<!--TODO this needs cleaning up-->
+<div *ngIf="viewName==='jenkins-live'||viewName==='jenkins-project'">
+    <div *ngFor="#layout of config[viewName]" class="jenkins-row">
+        <div *ngFor="#jobDefinition of layout"
+             class="job-container"
+             style="width:{{ jobDefinition.width }}%;">
+            <div *ngIf="data['jenkins-jobs'][jobDefinition.name]"
+                 class="jenkins-job {{ data['jenkins-jobs'][jobDefinition.name].colour }}"
+                 style="background: linear-gradient(to right, rgb(76, 175, 80) {{ data['jenkins-jobs'][jobDefinition.name].progress * 100 }}%, rgba(255,0,0,0) 0%)"
+            >
+                <span class="job-name">{{ jobDefinition.displayName }}</span>
+
+                <span *ngIf="data['jenkins-jobs'][jobDefinition.name].status === 'building'" class="meta white-text">
+                    Started {{ data['jenkins-jobs'][jobDefinition.name].start }}<br/>ETA {{ data['jenkins-jobs'][jobDefinition.name].eta }}
+                </span>
+                <span *ngIf="data['jenkins-jobs'][jobDefinition.name].status !== 'building'" class="meta white-text">
+                    {{ data['jenkins-jobs'][jobDefinition.name].start }}<br/>took {{ data['jenkins-jobs'][jobDefinition.name].duration }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="screen-meta">
+    {{ screenName }} - {{ viewName }}{{ previousView ? ' ('+viewDuration+'s) -> '+previousView :'' }}
 </div>

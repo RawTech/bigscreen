@@ -10,8 +10,12 @@
   },
 
   "screens": {
-    "jarvis": {
-      "type": "rundeck"
-    }
+    "jarvis": "rundeck-live",
+    "apollo": "jenkins-live"
+  },
+
+  "view": {
+    "jenkins-live": [],
+    "jenkins-project": []
   }
 }

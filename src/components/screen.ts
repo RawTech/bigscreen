@@ -6,28 +6,57 @@ declare var io: any;
     templateUrl: '/js/components/screen.html'
 })
 export class ScreenComponent {
-    name;
-    viewData;
-    viewType;
+    screenName;
+    viewDuration = 0;
+    previousView;
+    config = {};
+    viewName;
     socket;
-    data = {};
+    data = {
+        'jenkins-jobs': []
+    };
     zone: NgZone;
 
     constructor(private _routeParams: RouteParams) {
         this.zone = new NgZone({enableLongStackTrace: false});
         this.socket = io();
-        this.name = this._routeParams.get('name');
+        this.screenName = this._routeParams.get('name');
 
         this.initSocket();
+
+        setInterval(() => {
+            if (this.viewDuration > 0) {
+                this.zone.run(() => {
+                    this.viewDuration--;
+                });
+            }
+        }, 1000);
     }
 
     initSocket() {
-        this.socket.emit('name-announce', this.name);
+        this.socket.emit('name-announce', this.screenName);
+
+        this.socket.on('config', (data) => {
+            this.zone.run(() => {
+                this.config = data;
+            });
+        });
 
         this.socket.on('show-screen', (data) => {
             this.zone.run(() => {
-                this.viewData = data;
-                this.viewType = data.type;
+                if ((this.screenName === data.screenName || data.screenName === 'all') && this.viewName !== data.viewName) {
+                    if (data.duration !== undefined && this.previousView === undefined) {
+                        this.previousView = this.viewName;
+                        setTimeout(() => {
+                            this.viewName = this.previousView;
+                            this.previousView = undefined;
+                        }, data.duration * 1000);
+
+                        this.viewDuration = data.duration;
+                    }
+
+                    this.viewName = data.viewName;
+                }
             });
         });
 
@@ -35,6 +64,12 @@ export class ScreenComponent {
             this.zone.run(() => {
                 this.data[data.type] = data.data;
             });
+        });
+
+        this.socket.on('reload', (data) => {
+            if (this.screenName === data || data === 'all') {
+                location.reload();
+            }
         });
     }
 }
