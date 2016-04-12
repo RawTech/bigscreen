@@ -139,3 +139,7 @@ div.screen-meta {
 .grey.darken-3 {
     background-color: #424242 !important;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
